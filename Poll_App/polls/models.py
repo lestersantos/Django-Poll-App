@@ -13,3 +13,14 @@ class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
+
+"""
+python manage.py makemigrations polls
+
+Migrations are Django's way of propagating changes you make to your
+models into your database schema.
+
+Migrations like as a version control system for your database schema.
+makemigrations - commit
+migrate - push
+"""
