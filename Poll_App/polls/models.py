@@ -4,6 +4,8 @@ import datetime
 
 # Create your models here.
 """
+Models, databse layout (DRY) Don't repeat youself
+
 It contains essential fields and behaviors of the data
 you're storing. Each model maps to a single database table.
 """

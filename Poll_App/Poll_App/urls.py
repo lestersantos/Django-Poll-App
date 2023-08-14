@@ -23,3 +23,7 @@ urlpatterns = [
 ]
 
 #include() allows referencing other URLconfs
+
+"""
+URLconf maps URL patterns to views
+"""
