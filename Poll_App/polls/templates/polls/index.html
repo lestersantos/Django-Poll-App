@@ -2,7 +2,10 @@
 {% if latest_question_list %}
     <ul>
     {% for question in latest_question_list %}
-        <li><a href="{% url 'detail' question.id %}">{{ question.question_text }}</a></li>
+        <!-- Returns an absoulte path reference (a URL without the domain name)
+        matching a given view. Output links without violating the DRY
+        principle by having to hard-code URLs -->
+        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
