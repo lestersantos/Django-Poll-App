@@ -1,6 +1,8 @@
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 
-from .models import Question
+from .models import Question, Choice
 """
 Django view, is a type of web page, serves a specific function
 an has a specific template.
@@ -26,7 +28,9 @@ def index(request):
 """
 The get_object_or_404() takes a Django model as its first argument
 and an arbitray numberof keywords arguments, which it
-passes to the get() funciton of the model's manager
+passes to the get() function of the model's manager
+
+pk stands for primary key
 """
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -37,4 +41,21 @@ def results(request, question_id):
     return HttpResponse(response % question_id)
 
 def vote(request, question_id):
-    return HttpResponse("Vote You're voting on question %s." % question_id)
+    question = get_object_or_404(Question, pk=question_id)
+    print(request.POST)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST["choice"])
+    except (KeyError, Choice.DoesNotExist):
+        return render(
+            request,
+            "polls/detail.html",
+            {
+                "question": question,
+                "error_message": "You didn't select a choice.",
+            },
+        )
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+        # return HttpResponse("Vote You're voting on question %s." % question_id)
