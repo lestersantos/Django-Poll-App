@@ -1,3 +1,5 @@
+from typing import Any
+from django.db import models
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -56,6 +58,12 @@ def detail(request, question_id):
 class DetailView(generic.DetailView):
     model = Question
     template_name = "polls/detail.html"
+    
+    def get_queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())
 
 def results(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
