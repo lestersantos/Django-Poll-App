@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
-
+from django.utils import timezone
 from .models import Question, Choice
 """
 Django view, is a type of web page, serves a specific function
@@ -31,8 +31,16 @@ class IndexView(generic.ListView):
     context_object_name = "latest_question_list"
 
     def get_queryset(self):
-        """Return the last five published questions."""
-        return Question.objects.order_by("-pub_date")[:5]
+        """Return the last five published questions.
+        (not including those set to be published 
+        in the future).
+        """
+        """
+        pub_date__late is a field lookup
+        translated to 
+        SELECT * FROM Question WHERE pub_date <= timezone.now()
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
 
 """
 The get_object_or_404() takes a Django model as its first argument
